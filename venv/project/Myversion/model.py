@@ -11,7 +11,7 @@ from playsound import playsound
 
 arduino = serial.Serial('COM4', 9600)
 
-idxcode = {0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'error'}
+idxcode = {0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: 'error'}
 
 init = arduino.readline()
 
@@ -48,21 +48,21 @@ def use_model(data):
 
     action = idxcode[np.argmax(temp)]
 
-    print('Predict : ' + action)
+    print('예측 결과 : ' + action)
     return action
 
 def wav_sound(action):
-    if action == 'zero':
+    if action == '0':
         playsound("./sound/zero.wav")
-    elif action == 'one':
+    elif action == '1':
         playsound("./sound/one.wav")
-    elif action == 'two':
+    elif action == '2':
         playsound("./sound/two.wav")
-    elif action == 'three':
+    elif action == '3':
         playsound("./sound/three.wav")
-    elif action == 'four':
+    elif action == '4':
         playsound("./sound/four.wav")
-    elif action == 'five':
+    elif action == '5':
         playsound("./sound/five.wav")
     elif action == 'error':
         playsound("./sound/error.wav")

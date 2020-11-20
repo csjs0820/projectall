@@ -8,13 +8,19 @@ from keras.utils import np_utils
 from keras.models import load_model
 from dataset import loadData
 
-# 손실 이력 클래스 정의
+#손실 이력 클래스 정의
 class LossHistory(keras.callbacks.Callback):
     def init(self):
         self.losses = []
+        self.train_acc_list = []
+        self.test_acc_list = []
 
     def on_epoch_end(self, batch, logs={}):
         self.losses.append(logs.get('loss'))
+        self.train_acc_list.append(logs.get('accuracy'))
+
+#임시 코드
+
 
 # 1. 데이터 준비하기
 
@@ -56,8 +62,14 @@ plt.xlabel('epoch')
 plt.legend(['train'], loc='upper left')
 plt.show()
 
+plt.plot(history.train_acc_list)
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train'], loc='upper left')
+plt.show()
+
 # 7. 모델 평가하기
 score, acc = model.evaluate(x_test, t_test, batch_size=10)
 print('Test performance: accuracy={0}, loss={1}'.format(acc, score))
 
-model.save('test_model_addaction.h5') #test_model(0,1,2,3,4,5,6) test_model2(0,1,2,2,3,3,4,5,6)
+#model.save('test_model_addaction.h5')
