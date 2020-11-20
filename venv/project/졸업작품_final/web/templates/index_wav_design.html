@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--<p>수화번역시스템</p>-->
+<center><h1 id = "bigOne1"></h1></center>
+<center><h1 id = "bigOne2"></h1></center>
+<audio></audio>
+<!--<a href="/my-link/">예측 시작</a>-->
+
+<script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+<script src= "https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
+<script>
+
+  //var action ='none';
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDbGutg6CjQIxRzNikE9tXaYmWiJPJGM5o",
+    authDomain: "capstone-b68d8.firebaseapp.com",
+    databaseURL: "https://capstone-b68d8.firebaseio.com",
+    projectId: "capstone-b68d8",
+    storageBucket: "capstone-b68d8.appspot.com",
+    messagingSenderId: "951012100459",
+    appId: "1:951012100459:web:e4bc05d445c713c8ac242e"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+    var voices = [];
+	function setVoiceList() {
+		voices = window.speechSynthesis.getVoices();
+	}
+	setVoiceList();
+
+	if (window.speechSynthesis.onvoiceschanged !== undefined) {
+		window.speechSynthesis.onvoiceschanged = setVoiceList;
+	}
+	function speech(txt) {
+		if(!window.speechSynthesis) {
+			alert("음성 재생을 지원하지 않는 브라우저입니다. 크롬, 파이어폭스 등의 최신 브라우저를 이용하세요");
+		return;
+		}
+
+
+	var lang = 'ko-KR';
+	var utterThis = new SpeechSynthesisUtterance(txt);
+	var voiceFound = false;
+
+	for(var i = 0; i < voices.length ; i++) {
+		if(voices[i].lang.indexOf(lang) >= 0 || voices[i].lang.indexOf(lang.replace('-', '_')) >= 0) {
+			utterThis.voice = voices[i];
+			voiceFound = true;
+		}
+	}
+	if(!voiceFound) {
+		alert('voice not found');
+		return;
+	}
+	utterThis.lang = lang;
+	utterThis.pitch = 1;
+	utterThis.rate = 1; //속도
+	window.speechSynthesis.speak(utterThis);
+	}
+
+
+  var bigOne = document.getElementById('bigOne');
+  var database = firebase.database();
+  var dbRef = database.ref().child('predict_word');
+  var dbRef2 = database.ref().child('predict_spell');
+
+  //var sound0 = new Audio('static/zero.wav');
+  //var sound1 = new Audio('static/one.wav');
+  //var sound2 = new Audio('static/two.wav');
+  //var sound3 = new Audio('static/three.wav');
+  //var sound4 = new Audio('static/four.wav');
+  //var sound5 = new Audio('static/five.wav');
+  //var sound6 = new Audio('static/error.wav');
+
+  dbRef2.on('value', function(snapshot){
+  data2 = snapshot.val();
+  bigOne1.innerText = data2;
+  });
+
+  dbRef.on('value', function(snapshot){
+  data = snapshot.val();
+  bigOne2.innerText = data;
+  speech(data);
+
+  //var sound = new Audio('static/test1.wav');
+  //sound.play();
+  });
+
+</script>
+    </body>
+</html>
